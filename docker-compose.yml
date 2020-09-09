@@ -1,0 +1,44 @@
+version: "3"
+services:
+
+  nginx:
+    image:
+      nginx:latest
+    ports:
+      - "19080:80"
+    links:
+      - php-fpm
+    volumes:
+      - ./www:/var/www
+      - ./logs/nginx:/var/log/nginx
+      - ./docker/nginx/default.conf:/etc/nginx/sites-available/default
+      - ./docker/nginx/default.conf:/etc/nginx/sites-enabled/default
+
+
+#      - ./nginx/default:/etc/nginx/sites-available/default
+#      - ./nginx/default:/etc/nginx/sites-enabled/default
+#      - ./logs/nginx-access.log:/var/log/nginx/access.log
+#      - ./logs/nginx-error.log:/var/log/nginx/error.log
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: ./docker/php-fpm/Dockerfile
+    ports:
+      - "19000:9000"
+    volumes:
+      - ./www:/var/www
+#    depends_on:
+#      - mysql
+#
+#  mysql:
+#    image: mysql:8
+#    volumes:
+#      - /var/lib/mysql:/var/lib/mysql
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=32167
+#      - MYSQL_DATABASE=dbname
+#      - MYSQL_USER=dbuser
+#      - MYSQL_PASSWORD=32167
+#    ports:
+#      - "19306:3306"
